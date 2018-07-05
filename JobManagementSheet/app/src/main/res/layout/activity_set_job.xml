@@ -140,9 +140,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
-                    android:background="@drawable/border_text_edit"
-                    android:hint="E.g 19/06/2018"
-                    android:inputType="datetime" />
+                    android:hint="Date Requred"
+                    android:background="@drawable/border_text_edit" />
+
             </LinearLayout>
 
             <LinearLayout

@@ -4,11 +4,18 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 
 import com.example.josephthedev.jobmanagementsheet.Model.AddrLocation;
 import com.example.josephthedev.jobmanagementsheet.Model.Contact;
@@ -17,6 +24,10 @@ import com.example.josephthedev.jobmanagementsheet.Model.User;
 import com.example.josephthedev.jobmanagementsheet.R;
 import com.example.josephthedev.jobmanagementsheet.Services.SubmitJobService;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Random;
 
 import static com.example.josephthedev.jobmanagementsheet.Services.LoginService.MyPREFERENCES;
@@ -61,6 +72,12 @@ public class SetJobActivity extends AppCompatActivity {
         refID.setText(getRefCode());
         customer.setText(user.getFirstName() + " " + user.getLastName());
 
+        reqDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                open(view);
+            }
+        });
         requestJob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,6 +126,49 @@ public class SetJobActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    private void open(View view){
+        final View dialogView = View.inflate(this, R.layout.datetime, null);
+        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.datetime, null);
+
+        alertDialog.setView(layout);
+        alertDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        dialogView.findViewById(R.id.date_time_set).setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View view) {
+
+                DatePicker datePicker = dialogView.findViewById(R.id.date_picker);
+              //  TimePicker timePicker = dialogView.findViewById(R.id.time_picker);
+
+
+
+               int year = datePicker.getYear();
+               int day = datePicker.getDayOfMonth();
+               int month = datePicker.getMonth();
+
+               datePicker.setMinDate(System.currentTimeMillis() - 1000);
+
+
+                if (String.valueOf(month).length() == 1){
+                    month = Integer.parseInt("0" + month);
+                }
+
+                if (String.valueOf(day).length() == 1){
+                    day = Integer.parseInt("0" + day);
+                }
+
+                String datetime = year + "-" + month + "-" + day;
+                reqDate.setText(datetime);
+
+                alertDialog.dismiss();
+            }});
+        alertDialog.setView(dialogView);
+        alertDialog.show();
     }
 
 }

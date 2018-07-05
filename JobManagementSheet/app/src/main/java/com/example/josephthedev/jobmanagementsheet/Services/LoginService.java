@@ -89,27 +89,31 @@ public class LoginService extends AsyncTask<String, String, String> {
             jsonObject = new JSONObject(result);
 
             if(jsonObject.getInt("success") == 1){
+                if (jsonObject.getString("Role_Name").equals("Client")) {
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    //navigate to Main Menu
+                    progressDialog.dismiss();
+                    Intent i = new Intent(context, CurrentLocationActivity.class);
+                    user.setUser_ID(jsonObject.getString("User_ID"));
+                    user.setFirstName(jsonObject.getString("FirstName"));
+                    user.setLastName(jsonObject.getString("LastName"));
+                    user.setUsername(jsonObject.getString("Username"));
+                    user.setRole(jsonObject.getString("Role_Name"));
 
-                SharedPreferences.Editor editor = sharedpreferences.edit();
-                //navigate to Main Menu
-                progressDialog.dismiss();
-                Intent i = new Intent(context, CurrentLocationActivity.class);
-                user.setUser_ID(jsonObject.getString("User_ID"));
-                user.setFirstName(jsonObject.getString("FirstName"));
-                user.setLastName(jsonObject.getString("LastName"));
-                user.setUsername(jsonObject.getString("Username"));
-                user.setRole(jsonObject.getString("Role_Name"));
+                    editor.putString("User_ID", user.getUser_ID());
+                    editor.putString("FirstName", user.getFirstName());
+                    editor.putString("LastName", user.getLastName());
+                    editor.putString("Username", user.getUsername());
+                    editor.putString("Role_Name", user.getRole());
 
-                editor.putString("User_ID", user.getUser_ID());
-                editor.putString("FirstName", user.getFirstName());
-                editor.putString("LastName", user.getLastName());
-                editor.putString("Username", user.getUsername());
-                editor.putString("Role_Name", user.getRole());
-
-                editor.commit();
-                //i.("currentUser", jsonObject.toString());
-                Toast.makeText(context, "Wecome " + user.getFirstName() + " " + user.getLastName(), Toast.LENGTH_LONG).show();
-                context.startActivity(i);
+                    editor.commit();
+                    //i.("currentUser", jsonObject.toString());
+                    Toast.makeText(context, "Wecome " + user.getFirstName() + " " + user.getLastName(), Toast.LENGTH_LONG).show();
+                    context.startActivity(i);
+                }else {
+                    progressDialog.dismiss();
+                    Toast.makeText(context, "Sorry! You're not registered to the system", Toast.LENGTH_LONG).show();
+                }
             }else{
                 progressDialog.dismiss();
                 Toast.makeText(context, "Username or Password is incorrect", Toast.LENGTH_SHORT).show();
